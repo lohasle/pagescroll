@@ -1,5 +1,5 @@
 /**
- * Created by lohasle github.com/lohasle on 2014/11/17.
+ * Created by lohasle github.com/lohasle
  * 滚动偏移插件 相对位置偏移
  * offset 偏移位置 top bottom right left
  * offsetLen 偏移距离
@@ -27,7 +27,6 @@
         if (!/top|left|right|bottom/.test(_options.offset)){
             return false;
         }
-
         function getPosition(el){
             var result =el.position();
             if(el.is(':hidden')){
@@ -64,6 +63,23 @@
             topHome :position['top'],
             leftHome :position['left'],
             init:function(){
+                //如果不是绝对布局 调整布局
+                if(self.css('position')!=='absolute'){
+                    var _height =0,_width = 0,_left= 0,_top=0;
+                    self.css('opacity','0').show();
+                    _height = self.height();
+                    _width = self.width();
+                    _left = position.left;
+                    _top = position.top;
+                    self.css({
+                        'opacity':'1',
+                        'height':_height,
+                        'width':_width,
+                        'left':_left,
+                        'top':_top,
+                        'position':'absolute'
+                    }).hide();
+                }
                 if(_options.display==='hide'){
                     //移出
                     self.show();
@@ -88,7 +104,7 @@
                 var st = setTimeout(function(){
                     var _css = {};
                     var _hfCss = {};
-                    _hfCss[_options.offset===('top'||'bottom')?'top':'left'] =_options.offset==='top'? offsetObj.topHome:  offsetObj.leftHome;
+                    _hfCss[(_options.offset==='top'||_options.offset==='bottom')?'top':'left'] =(_options.offset==='top'||_options.offset==='bottom')?offsetObj.topHome:offsetObj.leftHome;
                     if(_options.display==='hide') {
                         //移出
                         if(_options.offset === 'top'){
@@ -141,7 +157,8 @@
     $(function(){
         $('body div[data-scrollAnimate]').each(function(){
             $(this).scrollAnimate({
-                offset:$(this).attr('data-scrollAnimate')
+                offset:$(this).attr('data-scrollAnimate'),
+                enableScrollTop:!($(this).attr('auto-animate')=='true')
             });
         });
     });
