@@ -79,6 +79,7 @@
                         'top':_top,
                         'position':'absolute'
                     }).hide();
+                    self.wrap('<div style=\"height:'+_height+'px; width:'+_width+'px\"></div>');
                 }
                 if(_options.display==='hide'){
                     //移出
