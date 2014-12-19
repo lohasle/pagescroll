@@ -1,5 +1,5 @@
 /**
- * Created by lohasle github.com/lohasle
+ * Created by lohasle github.com/lohasle on 2014/11/17.
  * 滚动偏移插件 相对位置偏移
  * offset 偏移位置 top bottom right left
  * offsetLen 偏移距离
@@ -11,22 +11,23 @@
 ;(function($){
     $.scrollAnimate = function (options) {
         var _options = $.extend({}, {
-            offset: 'top', //偏移位置
-            offsetLen: 50,//偏移距离
-            scrollHander: $.noop,//监听函数
-            callBackHander: $.noop,
-            display:'show',
-            easing:'swing',
-            duration: 380,//执行时间
-            enableScrollTop: true,
-            delay: 70//延时
-        }, options),
+                offset: 'top', //偏移位置
+                offsetLen: 50,//偏移距离
+                scrollHander: $.noop,//监听函数
+                callBackHander: $.noop,
+                display:'show',
+                easing:'swing',
+                duration: 380,//执行时间
+                enableScrollTop: true,
+                delay: 70//延时
+            }, options),
             self = $(this),
             offsetObj = {};
 
         if (!/top|left|right|bottom/.test(_options.offset)){
             return false;
         }
+
         function getPosition(el){
             var result =el.position();
             if(el.is(':hidden')){
@@ -35,6 +36,7 @@
             }
             return result;
         }
+
 
         function getElementLeft(element) {
             var actualLeft = element.offsetLeft;
@@ -60,27 +62,41 @@
             topWz = getElementTop(self[0])-document.documentElement.clientHeight+self.height();
 
         offsetObj = {
-            topHome :position['top'],
-            leftHome :position['left'],
+            topHome :self.css('position')!=='absolute'?0:position['top'],
+            leftHome :self.css('position')!=='absolute'?0:position['left'],
             init:function(){
-                //如果不是绝对布局 调整布局
+
+                //调整布局 不是绝对布局 调整布局
                 if(self.css('position')!=='absolute'){
-                    var _height =0,_width = 0,_left= 0,_top=0;
                     self.css('opacity','0').show();
-                    _height = self.height();
-                    _width = self.width();
-                    _left = position.left;
-                    _top = position.top;
+                    var $sp =$('<div style="position: relative;"></div>'),
+                        _height = self.height(),
+                        _width = self.width();
+                    $sp.css({
+                        'height':_height,
+                        'width':_width,
+                        'padding-top':self.css('padding-top')?self.css('padding-top'): 0,
+                        'padding-bottom':self.css('padding-bottom')?self.css('padding-bottom'): 0,
+                        'padding-left':self.css('padding-left')?self.css('padding-left'): 0,
+                        'padding-right':self.css('padding-right')?self.css('padding-right'): 0,
+                        'margin-top':self.css('margin-top')?self.css('margin-top'): 0,
+                        'margin-bottom':self.css('margin-bottom')?self.css('margin-bottom'): 0,
+                        'margin-left':self.css('margin-left')?self.css('margin-left'): 0,
+                        'margin-right':self.css('margin-right')?self.css('margin-right'): 0
+                    });
                     self.css({
                         'opacity':'1',
                         'height':_height,
                         'width':_width,
-                        'left':_left,
-                        'top':_top,
+                        'padding':0,
+                        'margin':0, //转移到父元素
+                        'left':offsetObj.topHome,
+                        'top':offsetObj.leftHome,
                         'position':'absolute'
                     }).hide();
-                    self.wrap('<div style=\"height:'+_height+'px; width:'+_width+'px\"></div>');
+                    self.wrap($sp);
                 }
+
                 if(_options.display==='hide'){
                     //移出
                     self.show();
@@ -156,10 +172,9 @@
         });
     };
     $(function(){
-        $('body div[data-scrollAnimate]').each(function(){
+        $('body div[data-scrollAnimate]').hide().each(function(){
             $(this).scrollAnimate({
-                offset:$(this).attr('data-scrollAnimate'),
-                enableScrollTop:!($(this).attr('auto-animate')=='true')
+                offset:$(this).attr('data-scrollAnimate')
             });
         });
     });
