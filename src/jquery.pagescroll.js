@@ -69,7 +69,7 @@
                 //调整布局 不是绝对布局 调整布局
                 if(self.css('position')!=='absolute'){
                     self.css('opacity','0').show();
-                    var $sp =$('<div style="position: relative;"></div>'),
+                    var $sp =$('<div data-create="auto" style="position: relative;"></div>'),
                         _height = self.height(),
                         _width = self.width();
                     $sp.css({
