@@ -81,8 +81,9 @@
                         'padding-right':self.css('padding-right')?self.css('padding-right'): 0,
                         'margin-top':self.css('margin-top')?self.css('margin-top'): 0,
                         'margin-bottom':self.css('margin-bottom')?self.css('margin-bottom'): 0,
-                        'margin-left':elem.css('marginLeft')?elem.css('marginLeft'): elem.position().left,
-                        'margin-right':elem.css('marginRight')?elem.css('marginRight'): elem.position().right
+                        'margin-left':elem.css('marginLeft')!='0px'?elem.css('marginLeft'): elem.position().left,
+                        'margin-right':elem.css('marginRight')!='0px'?elem.css('marginRight'): elem.position().right
+
                     });
                     self.css({
                         'opacity':'1',
